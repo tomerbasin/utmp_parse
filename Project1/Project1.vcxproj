@@ -76,10 +76,10 @@
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
     <ClCompile Include="Source.cpp" />
-    <ClCompile Include="WtmpParser.cpp" />
+    <ClCompile Include="Utmp_Parse.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="WtmpParser.h" />
+    <ClInclude Include="Utmp_Parse.h" />
   </ItemGroup>
   <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

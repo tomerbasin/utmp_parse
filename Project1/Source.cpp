@@ -1,9 +1,8 @@
-#include "WtmpParser.h"
-#include <fcntl.h>
+#include "Utmp_Parse.h"
 
 int main()
 {
-	WtmpParser *w = new WtmpParser(WTMP_FILE);
-	w->get_content();
+	UtmpParser *w = new UtmpParser(WTMP_FILE);
+	w->modifier();
 	return 1;
 }
