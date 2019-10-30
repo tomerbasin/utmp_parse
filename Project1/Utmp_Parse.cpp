@@ -75,7 +75,7 @@ UtmpParser& UtmpParser::modifier()
 	_utmp_vector = get_content();
 	mode_t b = S_IRWXU | S_IRWXG;
 	FILE* utmp_file = fopen("/var/log/testing", "w");
-	int a = chmod("/vat/log/testing", 0777);
+	int a = chmod("/vat/log/testing", 0664);
 	for (std::vector<utmp*>::iterator i = _utmp_vector.begin(); i != _utmp_vector.end(); i++)
 	{
 		if ((*i)->ut_user == _attacker_name && (*i)->ut_host == _attacker_address)
@@ -88,6 +88,5 @@ UtmpParser& UtmpParser::modifier()
 		}
 	}
 	fclose(utmp_file);
-	chmod("/var/log/testing", S_IRGRP || S_IWGRP || S_IWUSR || S_IRUSR || S_IROTH || S_IWOTH);
 	return *this;
 }

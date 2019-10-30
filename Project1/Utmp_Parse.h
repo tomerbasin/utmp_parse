@@ -8,6 +8,7 @@
 #include <vector>
 #include <fcntl.h>
 #include <sys/stat.h>
+
 class UtmpParser
 {
 private:
