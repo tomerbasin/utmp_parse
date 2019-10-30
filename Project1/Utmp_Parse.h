@@ -8,17 +8,19 @@
 #include <vector>
 #include <fcntl.h>
 #include <sys/stat.h>
-
+#include <utime.h>
 class UtmpParser
 {
 private:
-	std::string _attacker_name = "user1";
-	std::string _attacker_address = "192.168.56.1";
+	std::string _attacker_name = "root";
+	std::string _attacker_address = "10.0.0.1";
 	std::string _file_path = WTMP_FILE;
 	std::vector<utmp*> _utmp_vector;
 public:
 	UtmpParser() {};
-	UtmpParser(std::string wtmp_file_path);
+	UtmpParser(std::string file_path);
+	UtmpParser(std::string file_path, std::string attcker_name);
+	UtmpParser(std::string file_path, std::string attcker_name, std::string attacker_address);
 	~UtmpParser();
 
 	std::string get_attacker_name();
