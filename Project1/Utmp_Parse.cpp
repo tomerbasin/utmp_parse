@@ -106,7 +106,7 @@ UtmpParser& UtmpParser::modifier()
 	now->actime = (*last)->ut_tv.tv_sec;
 	now->modtime = (*last)->ut_tv.tv_sec;
 	fclose(utmp_file);
-	utime("/var/log/testing", now);
+	utime(_file_path.c_str(), now);
 	delete(now);
 	return *this;
 }
